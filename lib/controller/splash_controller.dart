@@ -14,13 +14,14 @@ class SplashController extends BaseController {
   }
 
   void checkLogin() async {
-    debugPrint("hello ${await sharedPreferencesHelper.retrievePrefBoolData(Common.strIsLogin)}");
-    switch (
-    await sharedPreferencesHelper.retrievePrefBoolData(Common.strIsLogin)) {
-      case true:
-        return Get.offAndToNamed(HomeScreen.pageId);
-      case false:
-        return Get.offAndToNamed(LoginScreen.pageId);
-    }
+    Get.toNamed(LoginScreen.pageId);
+    // debugPrint("hello ${await sharedPreferencesHelper.retrievePrefBoolData(Common.strIsLogin)}");
+    // switch (
+    // await sharedPreferencesHelper.retrievePrefBoolData(Common.strIsLogin)) {
+    //   case true:
+    //     return Get.offAndToNamed(HomeScreen.pageId);
+    //   case false:
+    //     return Get.offAndToNamed(LoginScreen.pageId);
+    // }
   }
 }

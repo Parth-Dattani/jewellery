@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jewellery/services/service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/model.dart';
 import '../screen/screen.dart';
@@ -11,77 +14,34 @@ class LoginController extends BaseController {
   TextEditingController passwordController = TextEditingController();
 
   final loginFormKey = GlobalKey<FormState>();
- // final auth = FirebaseAuth.instance;
-
-  UserModel loggedInUser = UserModel();
-  RxBool isObscure = true.obs;
-  @override
-  void onInit() {
-    super.onInit();
-   // validateUserAuth();
-  }
+  RxBool hidePassword = true.obs;
+  RxBool isRemember = false.obs;
 
   void loginWithValidation() {
     if (loginFormKey.currentState!.validate()) {
-      loader.value = true;
-      const CircularProgressIndicator();
-      // signIn(emailController.value.text, passwordController.value.text);
+      login(emailController.value.text, passwordController.value.text);
     } else {
-      loader.value = false;
+      debugPrint("inValid ${Validator.isEmail.toString()}");
     }
   }
 
-  //register time s.p. store data
-  /*void validateUserAuth() async {
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
-    var obtainedEmail = sharedPreferences.getString('email');
-    var obtainedPassword = sharedPreferences.getString('password');
-    if (obtainedEmail != null || obtainedPassword != null) {
-      loggedInUser.email = obtainedEmail!;
-      if (loggedInUser.email != null *//*|| loggedinUserPassword != null*//*) {
-        final loggedinuser = await auth.signInWithEmailAndPassword(
-            email: loggedInUser.email.toString(), password: obtainedPassword!);
-        if (loggedinuser != null) {
-          Get.toNamed(HomeScreen.pageId);
-        }
-      }
-    } else {
-      Get.toNamed(LoginScreen.pageId);
+  void login(email, password) async {
+    var response = await  RemoteServices.loginApi(email, password);
+    if(response.statusCode == 200){
+      var jsonData = json.decode(response.body);
+      print("JsonData : $jsonData");
+      Common.errorSnackBar("Login","You have SuccessFully Login");
+      loader.value = true;
+      Get.toNamed(HomeScreen.pageId);
     }
-  }*/
-
-  /*void signIn(String email, String password) async {
-    try {
-      UserCredential user = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      debugPrint("user : $user");
-
-      if (user != null) {
-        sharedPreferencesHelper.storePrefData(email, emailController.text);
-        sharedPreferencesHelper.storePrefData(password, passwordController.text);
-        sharedPreferencesHelper.storeBoolPrefData(Common.strIsLogin, true);
-        Get.offAndToNamed(HomeScreen.pageId);
-      }
-    } on FirebaseAuthException catch (e) {
-      Common.errorSnackBar("error", "somethingWentWrong");
-      debugPrint("Something Wrong $e");
+    else{
+      Common.errorSnackBar("Login Failed", "Invalid Login");
     }
-  }*/
+  }
 
+  void clearController(){
+    emailController.clear();
+    passwordController.clear();
+  }
 
-  /*sendDataFirestore(String userName, String email, *//*String rool*//*) async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = auth.currentUser;
-    UserModel userModel = UserModel();
-    userModel.userName = userName;
-    userModel.email = email;
-    userModel.uid = user!.uid;
-    await firebaseFirestore
-        .collection("users")
-        .doc(user.uid)
-        .set(userModel.toMap());
-  }*/
 }

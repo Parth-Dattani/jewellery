@@ -1,5 +1,6 @@
 
 import 'package:get/get.dart';
+import 'package:jewellery/screen/productScreen/product_screen.dart';
 
 import 'binding/binding.dart';
 import 'screen/screen.dart';
@@ -24,8 +25,8 @@ final List<GetPage> appPage = [
   ),
 
   GetPage(
-      name: CartScreen.pageId,
-      page: ()=> CartScreen(),
-      binding: CartBinding()
+      name: ProductScreen.pageId,
+      page: ()=> ProductScreen(),
+      binding: ProductBinding()
   ),
 ];

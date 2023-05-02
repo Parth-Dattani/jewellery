@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'color_config.dart';
 
 class AppTextStyle{
+  static const textFontSize16 = 16.0;
   static const textFontSize18 = 18.0;
   static const textFontSize20 = 20.0;
   static const textFontSize24 = 24.0;
@@ -24,8 +25,8 @@ class CustomTextStyle{
 
   static TextStyle appBarText = const TextStyle(
     color: ColorConfig.colorWhite,
-    fontSize: AppTextStyle.textFontSize24,
-    fontWeight: FontWeight.w700,
+    fontSize: AppTextStyle.textFontSize20,
+    fontWeight: FontWeight.w500,
     //height: 96
   );
 
@@ -41,10 +42,16 @@ class CustomTextStyle{
     color: ColorConfig.colorBlack
   );
 
-  static TextStyle addToCartText = const TextStyle(
+  static TextStyle rememberText = const TextStyle(
       fontWeight: FontWeight.w400,
       fontSize: 15,
-      color: ColorConfig.colorWhite
+      color: ColorConfig.colorBlack
+  );
+
+  static TextStyle subTitleText = const TextStyle(
+      fontSize: AppTextStyle.textFontSize16,
+      color: ColorConfig.colorWhite,
+      fontWeight: FontWeight.w500
   );
 }
 

@@ -22,7 +22,6 @@ class ProductScreen extends GetView<ProductController> {
             title: "Product Screen",
             leadingIcon: ImagePath.arrowBack,
             leadingOnTap: () {
-              controller.getCartData();
                Get.back();
             },
           ),
@@ -46,7 +45,7 @@ class ProductScreen extends GetView<ProductController> {
                     ),
                     GridView.builder(
                       itemBuilder: (context, index) {
-                        return controller.resultDataList.isNotEmpty
+                        return controller.resultDataList.value.categories!.isNotEmpty
                             ? Card(
                                 elevation: 5,
                                 shape: RoundedRectangleBorder(
@@ -55,66 +54,27 @@ class ProductScreen extends GetView<ProductController> {
                                 child: Column(
                                   //mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    ClipRRect(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(15)),
-                                        child: Center(
-                                          child: Image.network(
-                                            controller.resultDataList[index].image.toString(),
-                                            scale: 2,
-                                            height: 90,
-                                            width: 200,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        )),
                                     const SizedBox(
                                       height: 10,
                                     ),
                                     dataList(
-                                        "Name : ",
-                                        controller.resultDataList[index].title
-                                            .toString()),
+                                        "createdAt : ",
+                                        controller.resultDataList.value.categories![index].createdAt.toString()),
                                     dataList(
-                                        "Price : ",
-                                        controller.resultDataList[index].price
-                                            .toString()),
+                                        "Status : ",
+                                        controller.resultDataList.value.categories![index].status.toString()),
                                     dataList(
                                         "Category : ",
-                                        controller
-                                            .resultDataList[index].category
-                                            .toString()),
+                                        controller.resultDataList.value.categories![index].slug.toString()),
+
                                     CommonButton(
-                                      onPressed: () {
-                                        for (int i = 0; i < controller.cartList.length; i++) {
-                                          if (controller.cartList[i].id == controller.resultDataList[index].id) {
-                                            controller.quantity.value++;
-                                            print("qutity ${controller.quantity}");
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                const SnackBar(content: Text("Item already in your cart")));
-                                            //Get.back();
-                                            return;
-                                          }
-                                        }
-                                        print("cart Data Item :${controller.resultDataList[index].title} ");
-                                        controller.cartList.add(controller.resultDataList[index]);
-                                        sharedPreferencesHelper.storePrefData('addCart',
-                                            jsonEncode(controller.cartList));
-                                        // Get.toNamed(CartScreen.pageId,
-                                        // arguments: {
-                                        //   "quantity" : controller.quantity.value
-                                        // }
-                                        // );
-                                        Common.errorSnackBar("Cart", "Product Added into Cart");
-                                      },
+                                      onPress: (){},
+                                      name: "Add to Cart",
                                       color: ColorConfig.colorGreenText,
-                                      height: 30,
-                                      child: Text(
-                                        "Add to Cart",
-                                        style: CustomTextStyle.addToCartText,
-                                      ),
-                                    ),
+                                    )
                                   ],
                                 ),
+
                               )
                             : const Center(child: Text("No data Found"));
                       },
@@ -124,27 +84,12 @@ class ProductScreen extends GetView<ProductController> {
                               crossAxisSpacing: 15,
                               mainAxisSpacing: 18,
                               childAspectRatio: 0.7),
-                      itemCount: controller.resultDataList.length,
+                      itemCount: controller.resultDataList.value.categories!.length,
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                     ),
                   ],
                 ),
-              ),
-            ),
-          ),
-          bottomNavigationBar: Container(
-            decoration: const BoxDecoration(
-              color: Colors.teal,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("E-Commerce App"),
-                  Text("Cart ${controller.cartList.length}"),
-                ],
               ),
             ),
           ),

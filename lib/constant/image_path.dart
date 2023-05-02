@@ -8,4 +8,5 @@ class ImagePath{
   static String arrowBack = 'assets/Images/arrowBack.png';
   static String logOutIcon = 'assets/Images/logout.png';
   static String drawerIcon = 'assets/Images/drawer.png';
+  static String fbIcon = 'assets/Images/fbIcon.png';
 }

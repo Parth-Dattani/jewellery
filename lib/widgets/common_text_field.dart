@@ -36,7 +36,7 @@ class CommonTextField extends StatelessWidget {
         hintText: hintText,
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: ColorConfig.colorBlur,
+        fillColor: ColorConfig.colorLightGrey,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
