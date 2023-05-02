@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../constant/constant.dart';
 import '../../controller/controller.dart';
 import '../../widgets/widgets.dart';
+import '../productScreen/product_screen.dart';
 
 class HomeScreen extends GetView<HomeController> {
   static const pageId = '/HomeScreen';
@@ -12,25 +13,10 @@ class HomeScreen extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      ()=> CommonLoader(
+          () => CommonLoader(
         isLoad: controller.loader.value,
         body : Scaffold(
           key: controller.scaffoldKey,
-          appBar:  CommonAppBar(
-            title: "Home Screen",
-            leadingIcon: ImagePath.drawerIcon,
-            leadingOnTap: (){
-              debugPrint("TAp");
-              //Scaffold.of(context).openDrawer();
-              controller.scaffoldKey.currentState?.isDrawerOpen;
-              controller.scaffoldKey.currentState?.openDrawer();
-            },
-            actionIcon: ImagePath.logOutIcon,
-            actionIconSize: 2,
-            actionOnTap: (){
-              controller.logOut();
-            },
-          ),
           body: SafeArea(
             child: SingleChildScrollView(
               child: Padding(
@@ -38,125 +24,85 @@ class HomeScreen extends GetView<HomeController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Stack(
+                      children: [
+                        Container(
+                          color: ColorConfig.colorBlack,
+                          child: Image.network(controller.categoryList.value.categories![0].image.toString(),
 
-                    const SizedBox(height: 15,),
-                     Text("Category", style: CustomTextStyle.headingText,),
-                    const SizedBox(height: 15,),
-                    GridView.builder(
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: (){
-                            debugPrint("sfsdf ${controller.categoryList[index]}");
-                            // Get.toNamed(ProductScreen.pageId,
-                            // arguments: {
-                            //   "category" : controller.categoryList[index].toString()
-                            // }
-                            // );
-
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.teal
-                            ),
-                            child: Center(child: Text(controller.categoryList[index])),
                           ),
+                        ),
+                        Positioned(child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(onPressed: (){}, icon: const Icon(Icons.favorite, size: 30, color: ColorConfig.colorWhite,)),
+                            IconButton(onPressed: (){}, icon: const Icon(Icons.search, size: 25, color: ColorConfig.colorWhite,)),
+                          ],
+                        )),
+                        Positioned(
+                            bottom: 10, left: 10,
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Winter Collection", style: CustomTextStyle.buttonText ,),
+                            Text("Winter Collection > ", style: CustomTextStyle.subTitleText,),
+
+                          ],
+                        )),
+                      ],
+                    ),
+                    const SizedBox(height: 15,),
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Text("Category", style: CustomTextStyle.headingText,),
+                         Text("ALL >", style: CustomTextStyle.rememberText,),
+                       ],
+                     ),
+                    const SizedBox(height: 15,),
+                    controller.categoryList != null?
+
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: controller.categoryList.value.categories!.length,
+                  itemBuilder:(context, index) {
+                    return GestureDetector(
+                      onTap: (){
+                        debugPrint("sfsdf ");
+                        Get.toNamed(ProductScreen.pageId,
+                        arguments: {
+                          "category" : controller.categoryList.value.categories![index].id
+                        }
                         );
                       },
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 15,
-                          mainAxisSpacing: 18,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.teal
+                        ),
+                        child: Center(child: Text(
+                            controller.categoryList!=null ?
+                            controller.categoryList.value.categories![index].slug.toString() :"dsf"
+                        )),
                       ),
-                      itemCount: controller.categoryList.length,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                    ),
+                    );
+                  },
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 15,
+                    mainAxisSpacing: 18,
+                  ),
+                )
+                    : const Text("No Data Found"),
                   ],
                 ),
               ),
             ),
           ),
-          bottomNavigationBar: Container(
-            decoration: const BoxDecoration(
-
-              color: Colors.teal,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("E-Commerce App"),
-                  Text("Cart : ${controller.cartList.length}"),
-                ],
-              ),
-            ),
-          ),
-          drawer: drawer(),
         ),
       ),
     );
   }
-
-  Widget drawer (){
-    return Obx(
-          ()=> Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            SizedBox(
-              height: 250,
-              child: DrawerHeader(
-                decoration: const BoxDecoration(
-                  color: ColorConfig.colorPrimary,
-                ),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20,),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.asset(
-                        ImagePath.profileLogo,
-                        scale: 5,
-                        //height: 50,width: 78,
-                      ),
-                    ),
-                    const SizedBox(height: 10,),
-                    // Text(controller.user!.email.toString(), style: CustomTextStyle.buttonText,),
-                  ],
-                ),
-              ),
-            ),
-            Column(
-              children: List.generate(
-                controller.drawerItems.length,
-                    (index) =>
-                    Column(
-                      children: [
-                        ListTile(
-                          selected: controller.drawerItems[index].selected ?? false,
-                          selectedColor: ColorConfig.colorPrimary,
-                          leading: Icon(controller.drawerItems[index].icon ?? (Icons.ssid_chart),
-                            color: ColorConfig.colorLightBlack,
-                            size: 30,
-                          ),
-                          title: Text(
-                            controller.drawerItems[index].title ?? '',
-                            style:  CustomTextStyle.linkText,
-                          ),
-                          onTap: () {
-                            controller.drawerOnTap(index);
-                          },
-                        ),
-                        const Divider(indent: 60,thickness: 1,color: ColorConfig.colorLightGrey),
-                      ],
-                    ),
-              ),
-            ),
-          ],
-        ),),
-    );
-  }
-
 }
